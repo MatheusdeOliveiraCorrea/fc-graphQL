@@ -26,7 +26,15 @@ func (r *mutationResolver) CriarCategoria(ctx context.Context, input model.NovaC
 
 // CriarCurso is the resolver for the criarCurso field.
 func (r *mutationResolver) CriarCurso(ctx context.Context, input model.NovoCurso) (*model.Curso, error) {
-	panic(fmt.Errorf("not implemented: CriarCurso - criarCurso"))
+	course, err := r.CourseDB.Create(input.Nome, input.Descricao, input.IDCategoria)
+	if err != nil {
+		return nil, err
+	}
+	return &model.Curso{
+		ID:          course.ID,
+		Nome:        course.Name,
+		Descricao: &course.Description,
+	}, nil
 }
 
 // Categorias is the resolver for the categorias field.
