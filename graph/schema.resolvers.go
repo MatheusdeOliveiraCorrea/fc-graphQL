@@ -6,8 +6,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
-
 	"exemplo.com/graph/model"
 )
 
@@ -57,7 +55,19 @@ func (r *queryResolver) Categorias(ctx context.Context) ([]*model.Categoria, err
 
 // Cursos is the resolver for the cursos field.
 func (r *queryResolver) Cursos(ctx context.Context) ([]*model.Curso, error) {
-	panic(fmt.Errorf("not implemented: Cursos - cursos"))
+	courses, err := r.CourseDB.FindAll()
+	if err != nil {
+		return nil, err
+	}
+	var coursesModel []*model.Curso
+	for _, course := range courses {
+		coursesModel = append(coursesModel, &model.Curso{
+			ID:          course.ID,
+			Nome:        course.Name,
+			Descricao: &course.Description,
+		})
+	}
+	return coursesModel, nil
 }
 
 // Mutation returns MutationResolver implementation.
